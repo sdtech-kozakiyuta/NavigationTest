@@ -11,6 +11,7 @@ function PostHomeScreen({navigation, route}) {
 
   const [count, setCount] = React.useState(0);
 
+  // headerにボタンを追加
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (

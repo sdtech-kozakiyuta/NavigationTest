@@ -1,13 +1,13 @@
 import React, {useContext, useState} from 'react';
 import {Button, Image} from 'react-native';
 import { Context } from '../../App';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screen/HomeScreen';
-import DetailsScreen from '../screen/DetailScreen';
-import PostHomeScreen from '../screen/PostHomeScreen';
-import CreatePostScreen from '../screen/CreatePostScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import PlanScreen from '../screen/PlanScreen';
+import FavoriteContentsScreen from '../screen/FavoriteContentsScreen';
+import SettingsScreen from '../screen/SettingsScreen';
+import HomeTabStackNav from './HomeTabStackNav';
 
-const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function AuthedStackNav() {
   const [state, dispatch] = useContext(Context)
@@ -27,8 +27,8 @@ function AuthedStackNav() {
 
   return (
     <>
-    <Stack.Navigator
-      initialRouteName='Home'
+    <Tab.Navigator
+      initialRouteName='HomeTabStack'
       // 全体の画面に設定を行いたい場合は以下のようにできる
       screenOptions={{
         headerStyle: {
@@ -40,28 +40,26 @@ function AuthedStackNav() {
         },
       }}>
       {/* 'component'propsではcomponent しか受け付けない。インライン関数とか入れたらダメ */}
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        // Headerのタイトルやスタイルは以下のOptionで調整する
+      <Tab.Screen
+        name="HomeTabStack"
+        component={HomeTabStackNav}
+      />
+      <Tab.Screen
+        name="Plan"
+        component={PlanScreen}
         options={{headerRight: ChangeLoginStateButton}}
       />
-      <Stack.Screen
-        name="Details"
-        component={DetailsScreen}
+      <Tab.Screen
+        name="FavoriteContents"
+        component={FavoriteContentsScreen}
         options={{headerRight: ChangeLoginStateButton}}
       />
-      <Stack.Screen
-        name="PostHome"
-        component={PostHomeScreen}
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{headerRight: ChangeLoginStateButton}}
       />
-      <Stack.Screen
-        name="CreatePost"
-        component={CreatePostScreen}
-        options={{headerRight: ChangeLoginStateButton}}
-      />
-    </Stack.Navigator>
+    </Tab.Navigator>
     </>
   );
 }

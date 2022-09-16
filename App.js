@@ -12,21 +12,34 @@ const initialState = {
 
 export const Context = createContext(initialState); // <- initialStateを使ってContextを作成
 
+// 下記コマンドで、Details画面に引数を渡して遷移可能
+// 下記コマンドのPathは以下の"linking - config"の設定に準じて決まる。
+// "npx uri-scheme open "navigationtest://contentA/details/77/OKGoogle" --android"
 const linking = {
   prefixes: [
     /* your linking prefixes */
-    'awesomeproject://',
+    'navigationtest://',
   ],
   config: {
     /* configuration for matching screens with paths */
     screens: {
       Authed: {
-        path: 'authed',
-        initialRouteName: 'Details',
+        initialRouteName: 'Plan',
         screens: {
-          Home: 'home',
-          Details: {
-            path: 'details/:itemId/:otherParams',
+          HomeTabStack: {
+            screens: {
+              ContentA: {
+                path: 'contentA',
+                screens: {
+                  Details: {
+                    path: 'details/:itemId/:otherParams',
+                  },
+                },
+              },
+            },
+          },
+          Settings: {
+            path: 'settings',
           },
         },
       },
