@@ -25,8 +25,8 @@ function HomeScreen({navigation}) {
       />
       <View style={{flex:0.1}}/>
       <Button
-        title="Go to Post Home"
-        onPress={() => navigation.navigate('PostHome')}
+        title="Push to Post Home"
+        onPress={() => navigation.push('PostHome')}
       />
      
     </View>

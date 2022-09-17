@@ -7,7 +7,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import RootStackNav from './src/navigation/RootStackNav';
 
 const initialState = {
-  isLogin: false,
+  isLogin: true,
 };
 
 export const Context = createContext(initialState); // <- initialStateを使ってContextを作成

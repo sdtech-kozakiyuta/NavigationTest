@@ -7,7 +7,7 @@ import AuthedStackNav from './AuthedStackNav';
 const Stack = createNativeStackNavigator();
 
 function RootStackNav() {
-  const [state, dispatch] = useContext(Context)
+  const [state, dispatch] = useContext(Context);
 
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
