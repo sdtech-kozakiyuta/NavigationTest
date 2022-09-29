@@ -7,10 +7,19 @@ import {NavigationContainer} from '@react-navigation/native';
 import RootStackNav from './src/navigation/RootStackNav';
 
 const initialState = {
-  isLogin: true,
+  isLogin: false,
+};
+
+const intentState = {
+  path: '',
 };
 
 export const Context = createContext(initialState); // <- initialStateを使ってContextを作成
+export const IntentContext = createContext(intentState);
+
+function pathReducer(state, action) {
+  return {...state, path: action.path};
+}
 
 // 下記コマンドで、Details画面に引数を渡して遷移可能
 // 下記コマンドのPathは以下の"linking - config"の設定に準じて決まる。
@@ -51,6 +60,7 @@ function App() {
   const [state, dispatch] = useReducer((state, action) => {
     return {...state, isLogin: action.isLogin};
   }, initialState);
+  const [path, pathDipatch] = useReducer(pathReducer, intentState);
 
   const handleOpenURL = event => {
     if (event.url) {
@@ -89,12 +99,16 @@ function App() {
   }, []);
 
   return (
-    <Context.Provider value={[state, dispatch]}>
-      {/* 手順2："NavigationContainer"で"Navigator"要素をWrap。これをAppのルートで行う。 */}
-      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-        <RootStackNav />
-      </NavigationContainer>
-    </Context.Provider>
+    <IntentContext.Provider value={[path, pathDipatch]}>
+      <Context.Provider value={[state, dispatch]}>
+        {/* 手順2："NavigationContainer"で"Navigator"要素をWrap。これをAppのルートで行う。 */}
+        <NavigationContainer
+          // linking={linking}
+          fallback={<Text>Loading...</Text>}>
+          <RootStackNav />
+        </NavigationContainer>
+      </Context.Provider>
+    </IntentContext.Provider>
   );
 }
 

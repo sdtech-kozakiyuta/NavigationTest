@@ -1,6 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Image} from 'react-native';
-import { Context } from '../../App';
+import { Context, IntentContext } from '../../App';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import PlanScreen from '../screen/PlanScreen';
 import FavoriteContentsScreen from '../screen/FavoriteContentsScreen';

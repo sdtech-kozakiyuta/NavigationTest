@@ -1,9 +1,22 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
 import {Button, View, Text, Linking, StyleSheet,} from 'react-native';
+import { IntentContext } from '../../App';
 
 // "navigation" propsはすべてのScreen Component に渡されるモノ
 function HomeScreen({navigation}) {
+  const [path, pathDispatch] = React.useContext(IntentContext);
+
+  useEffect(()=>{
+    if(path.path != ''){
+      navigation.navigate('Details',{
+        itemId: 86,
+        otherParams: 'come from login',
+      });
+      pathDispatch({path:''});
+      console.log('done navigation');
+    }
+  },[])
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
