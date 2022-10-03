@@ -2,9 +2,10 @@
 
 import {createContext, useReducer, useEffect} from 'react';
 import * as React from 'react';
-import {Platform, Linking, Text} from 'react-native';
+import {Platform, Linking, Text, Alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import RootStackNav from './src/navigation/RootStackNav';
+import messaging from '@react-native-firebase/messaging';
 
 const initialState = {
   isLogin: false,
@@ -13,6 +14,18 @@ const initialState = {
 const intentState = {
   path: '',
 };
+
+// getToken ->
+const checkToken = async () => {
+  const fcmToken = await messaging().getToken();
+  if (fcmToken) {
+    console.log(fcmToken);
+  }
+};
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 export const Context = createContext(initialState); // <- initialStateを使ってContextを作成
 export const IntentContext = createContext(intentState);
@@ -97,6 +110,44 @@ function App() {
       Linking.removeEventListener('url', handleOpenURL);
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    // Appは起動しているが、Backgroundにある場合（Foregroundの場合、Push通知は表示されない）
+    // データペイロードの中に"type"のプロパティがあると仮定した場合
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      // navigation.navigate(remoteMessage.data.type);
+    });
+
+    // 停止状態のAppをPush通知のタップから起動させた場合
+    // ペイロードの情報を基に特定の画面に遷移させるような場合
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          console.log('type', remoteMessage.data.type);
+          // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+        // setLoading(false);
+      });
+  }, []);
+
+  checkToken();
 
   return (
     <IntentContext.Provider value={[path, pathDipatch]}>
